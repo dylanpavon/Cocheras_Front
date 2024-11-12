@@ -1,0 +1,129 @@
+.parking-spot {
+    aspect-ratio: 1;
+    border: 2px solid;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    max-width: 120px; /* Limita el ancho máximo de los cuadros */
+    margin: 2px; /* Espaciado entre cuadros */
+}
+
+.parking-spot.available {
+    background-color: #d1fae5;
+    border-color: #059669;
+}
+
+.parking-spot.occupied {
+    background-color: #fee2e2;
+    border-color: #dc2626;
+}
+
+.parking-spot:hover {
+    transform: scale(1.02);
+}
+
+.parking-spot i {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.parking-spot.available i {
+    color: #059669;
+}
+
+.parking-spot.occupied i {
+    color: #dc2626;
+}
+
+.spot-indicator {
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid;
+    border-radius: 4px;
+}
+
+.spot-indicator.available {
+    background-color: #d1fae5;
+    border-color: #059669;
+}
+
+.spot-indicator.occupied {
+    background-color: #fee2e2;
+    border-color: #dc2626;
+}
+
+body{
+    background: #00416A;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #E4E5E6, #00416A);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #E4E5E6, #00416A); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    
+}
+
+@media (max-width: 768px) {
+    .parking-spot {
+        font-size: 0.875rem;
+    }
+}
+
+
+      .zoomable-image-container {
+      cursor: zoom-in;
+      /* Cambia el cursor al pasar sobre la imagen */
+    }
+
+    .zoomed-image-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 1050;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.5);
+      /* Fondo oscuro */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    .zoomed-image {
+      max-width: 90%;
+      max-height: 90%;
+    }
+
+    .bg-image {
+        background-image: url('/images/Foto1.jpg'); /* Reemplaza 'ruta/de/tu-imagen.jpg' por la ubicación de tu imagen */
+        background-size: cover; /* La imagen cubrirá todo el fondo */
+        background-position: center; /* Centra la imagen */
+        background-repeat: no-repeat; /* Evita que la imagen se repita */
+        color: white; /* Cambia el color del texto si necesitas más contraste */
+        padding: 20px; /* Añade algo de relleno si es necesario */
+      }
+
+      h1.titulo {
+        position: relative;
+        color: #ffffff;
+        text-shadow: 0px 0px 8px rgba(173, 216, 230, 0.6), 
+                     0px 0px 15px rgba(173, 216, 230, 0.4);
+        animation: haloTextAnimation 1.5s infinite alternate;
+    }
+    
+    @keyframes haloTextAnimation {
+        0% {
+            text-shadow: 0px 0px 8px rgba(173, 216, 230, 0.6), 
+                         0px 0px 15px rgba(173, 216, 230, 0.4);
+        }
+        100% {
+            text-shadow: 0px 0px 15px rgba(173, 216, 230, 0.8), 
+                         0px 0px 30px rgba(173, 216, 230, 0.6);
+        }
+    }
+    
+
+      
+      

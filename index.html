@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Parking Córdoba Garage</title>
+    <link
+      rel="shortcut icon"
+      href="/images/icon.png"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+
+  <body>
+    <nav class="navbar mx-3">
+      <div class="container">
+        <ul class="nav nav-underline">
+          <li class="nav-item">
+            <a
+              class="nav-link active"
+              aria-current="page"
+              href="/"
+              id="nav-dashboard"
+              >Dashboard</a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white" href="#div-ingVh" id="nav-ingVh"
+              >Ingreso Vehículo</a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white" href="/clientes.html" id="nav-clientes"
+              >Clientes</a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white" href="/facturacion.html" id="nav-fact"
+              >Facturación</a
+            >
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link text-white"
+              href="/reportes.html"
+              id="nav-fact"
+              >Reportes</a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white" href="" id="nav-fact"
+            data-bs-toggle="modal" data-bs-target="#modalAcercaDe">Acerca De</a
+            >
+          </li>
+        </ul>
+        <div class="text-end">
+          <button class="btn btn-dark" type="submit" id="logoutBtn"><a href="/login.html" style="color:white; text-decoration: none;">Cerrar Sesión</a></button>
+        </div>
+      </div>
+    </nav>
+    <div class="container py-5">
+      <!-- Header -->
+      <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+              <i class="bi bi-building fs-2 text-primary-emphasis me-2"></i>
+              <h1 class="mb-0">Parking Córdoba Garage</h1>
+            </div>
+            <div class="text-end">
+              <p class="h5 mb-1">
+                Lugares Disponibles: <span id="availableSpots">40</span> / 40
+              </p>
+              <small class="text-muted"></small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6">
+            <!-- Planta Alta -->
+            <div class="card mb-4 shadow-sm">
+              <div class="card-body">
+                <h2 class="card-title mb-4">Planta Baja</h2>
+                <div class="row g-3" id="lowerLevel"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Planta Baja -->
+          <div class="col-md-6">
+            <div class="card mb-4 shadow-sm">
+              <div class="card-body">
+                <h2 class="card-title mb-4">Planta Alta</h2>
+                <div class="row g-3" id="upperLevel"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Carga Vehículos -->
+      <div class="card shadow-sm mb-4" id="">
+        <div class="card-body">
+          <!--<div class="d-flex gap-4">
+            <div class="d-flex align-items-center">
+              <div class="spot-indicator available me-2"></div>
+              <span>Disponible</span>
+            </div>
+            <div class="d-flex align-items-center">
+              <div class="spot-indicator occupied me-2"></div>
+              <span>Ocupado</span>
+            </div>
+          </div>-->
+          <div class="d-flex align-items-center">
+            <i class="bi bi-car-front-fill fs-2 text-primary-emphasis me-2"></i>
+            <h1 class="mb-0">Nuevo Ingreso</h1>
+          </div>
+        </div>
+      </div>
+      <form id="ingVh">
+      <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+          <h3>Datos del Vehículo</h3>
+          <div class="row g-3" id="div-ingVh">
+            <!-- ID -->
+            <div class="col-md-2" style="display: none">
+              <label for="idVehiculo" class="form-label">ID Vehículo</label>
+              <input
+                type="text"
+                id="idVehiculo"
+                class="form-control"
+                disabled
+              />
+            </div>
+            <!-- Patente -->
+            <div class="col-md-6">
+              <label for="patente" class="form-label">Patente</label>
+              <input
+                type="text"
+                id="patente"
+                class="form-control"
+                placeholder="Ej. ABC123"
+                required
+              />
+              <div class="invalid-feedback">Ingrese una patente válida.</div>
+            </div>
+
+            <!-- Marca (con opción de ingreso manual) -->
+            <div class="col-md-6">
+              <label for="marca" class="form-label">Marca</label>
+              <select
+                id="marca"
+                class="form-select"
+                required
+                onchange="handleMarcaChange(this); cargarModelos();"
+              >
+                <option value="">Seleccionar marca</option>
+                <!-- Opciones de la BD se llenarán aquí -->
+                <option value="otro">Otra (ingresar manualmente)</option>
+              </select>
+              <input
+                type="text"
+                id="marcaInput"
+                class="form-control mt-2"
+                placeholder="Ingrese nueva marca"
+                style="display: none"
+              />
+            </div>
+
+            <!-- Modelo (dependiente de Marca, con opción de ingreso manual) -->
+            <div class="col-md-6">
+              <label for="modelo" class="form-label">Modelo</label>
+              <select
+                id="modelo"
+                class="form-select"
+                required
+                onchange="handleModeloChange(this)"
+              >
+                <option value="">Seleccionar modelo</option>
+                <!-- Opciones dependientes de la marca se llenarán aquí -->
+                <option value="otro">Otro (ingresar manualmente)</option>
+              </select>
+              <input
+                type="text"
+                id="modeloInput"
+                class="form-control mt-2"
+                placeholder="Ingrese nuevo modelo"
+                style="display: none"
+              />
+            </div>
+
+            <!-- Tipo de Vehículo -->
+            <div class="col-md-6">
+              <label for="tipoVehiculo" class="form-label"
+                >Tipo de Vehículo</label
+              >
+              <select id="tipoVehiculo" class="form-select" required>
+                <option value="">Seleccionar tipo</option>
+                <!-- Opciones de la BD se llenarán aquí -->
+              </select>
+            </div>
+
+            <!-- Color -->
+            <div class="col-md-6">
+              <label for="color" class="form-label">Color</label>
+              <input
+                type="text"
+                id="color"
+                class="form-control"
+                placeholder="Ej. Rojo"
+                required
+              />
+              <div class="invalid-feedback">Ingrese el color del vehículo.</div>
+            </div>
+
+            <!-- Lugar Disponible -->
+            <div class="col-md-6">
+              <label for="lugar" class="form-label">Lugar</label>
+              <select id="lugar" class="form-select" required>
+                <option value="">Seleccionar lugar disponible</option>
+                <!-- Opciones de lugares disponibles se llenarán aquí desde el dashboard -->
+              </select>
+            </div>
+
+            <!-- Botón para registrar -->
+            <div class="col-12">
+              <button
+                type="button"
+                class="btn btn-dark"
+                onclick="registrarRemito()"
+              >
+                Registrar Ingreso
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+    </div>
+
+    <!-- Modal -->
+<div class="modal fade" id="modalAcercaDe" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Responsables</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="container text-center">
+          <div class="row mt-5">
+            <!-- Alumno 1 
+            <div class="col-lg-4 zoomable-image-container">
+              <img class="bd-placeholder-img rounded-circle zoomable-image" style="object-fit: contain; background-position: center; background-color:darkgrey;"
+                width="140" height="140" src="/images/martin.jpg" alt="Cacciamano, Joaquín" />
+              <p class="fw-normal anton-regular">Cacciamano, Joaquín - Leg. 112804</p>
+            </div>-->
+            <!-- Alumno 2 -->
+            <div class="col-lg-4 zoomable-image-container">
+              <img class="bd-placeholder-img rounded-circle zoomable-image" style="object-fit: contain; background-position: center; background-color:darkgrey;" width="140"
+                height="140" src="/images/nelson.jpg" alt="González, Matías" />
+              <p class="fw-normal anton-regular">González, Matías - Leg. 114250</p>
+            </div>
+            <!-- Alumno 3 -->
+            <div class="col-lg-4 zoomable-image-container">
+              <img class="bd-placeholder-img rounded-circle zoomable-image" style="object-fit: contain; background-position: center; background-color:darkgrey;"
+                width="140" height="140" src="/images/apu.jpg" alt="Pavón, Dylan" />
+              <p class="fw-normal anton-regular">Pavón, Dylan - Leg. 412255</p>
+            </div>
+            <!-- Alumno 4 -->
+            <div class="col-lg-4 zoomable-image-container">
+              <img class="bd-placeholder-img rounded-circle zoomable-image" style="object-fit: contain; background-position: center; background-color:darkgrey;"
+                width="140" height="140" src="/images/carl.jpg" alt="Pineda, Diego" />
+              <p class="fw-normal anton-regular">Pineda, Diego - Leg. 412672</p>
+            </div>
+            <!-- Alumno 5 -->
+            <div class="col-lg-4 zoomable-image-container">
+              <img class="bd-placeholder-img rounded-circle zoomable-image" style="object-fit: contain; background-position: center; background-color:darkgrey;"
+                width="140" height="140" src="/images/lenny.jpg" alt="Verón, Andrés" />
+              <p class="fw-normal anton-regular">Verón, Andrés - Leg. 113872</p>
+            </div>
+            <!-- Alumno 6 -->
+            <div class="col-lg-4 zoomable-image-container">
+              <img class="bd-placeholder-img rounded-circle zoomable-image" style="object-fit: contain; background-position: center; background-color:darkgrey;"
+                width="140" height="140" src="/images/patinio.jpg" alt="Cortez, Emanuel" />
+              <p class="fw-normal anton-regular">Cortez, Emanuel - Leg. 113839</p>
+            </div>
+            <!-- Alumno 7 -->
+            <div class="col-lg-4 zoomable-image-container">
+              <img class="bd-placeholder-img rounded-circle zoomable-image" style="object-fit: contain; background-position: center; background-color:darkgrey;"
+                width="140" height="140" src="/images/troy.jpg" alt="?, Jeremías" />
+              <p class="fw-normal anton-regular">Pérez, Jeremías - Leg. 114047</p>
+            </div>
+            <!-- /.col-lg-4 -->
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
+        
+      </div>
+    </div>
+  </div>
+</div>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/script.js"></script>
+  </body>
+</html>
