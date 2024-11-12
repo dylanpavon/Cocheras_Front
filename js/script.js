@@ -1,7 +1,9 @@
 const API_URL = "https://localhost:7230";
 
+
 document.addEventListener("DOMContentLoaded", () => {
   const page = window.location.pathname.split("/").pop();
+  
 
   if (page === "clientes.html") {
     // Código específico para la página de clientes
@@ -1181,10 +1183,10 @@ async function registrarFactura() {
   const fecha_salida = document.getElementById("fechaHoraSalida").value;
   const id_vehiculo = parseInt(document.getElementById("idVehiculo").value, 10);
   const id_lugar = document.getElementById("lugar").value;
-  const id_abono = parseInt(document.getElementById("abono").value, 10);
-  const precio = parseFloat(document.getElementById("total").value);
-  const descuento = parseInt(document.getElementById("descuento").value, 10);
-  const recargo = parseInt(document.getElementById("recargo").value, 10);
+  let id_abono = document.getElementById("abono").value;
+  const precio = parseFloat(document.getElementById("total").value,10);
+  let descuento = document.getElementById("descuento").value;
+  let recargo = document.getElementById("recargo").value;
 
   const form = document.getElementById("formFactura");
 
@@ -1203,7 +1205,9 @@ async function registrarFactura() {
     alert("Por favor, complete todos los campos obligatorios.");
     return;
   }
-
+ if(id_abono === ""){id_abono=null;}
+ if(descuento === ""){descuento=null;}
+ if(recargo === ""){recargo=null;}
   // Envolver detallE_FACTURAs en un array
   const detallE_FACTURAs = [
     {
@@ -1211,13 +1215,12 @@ async function registrarFactura() {
       fecha_salida,
       id_vehiculo,
       id_lugar,
-      id_abono,
       precio,
+      id_abono,
       descuento,
-      recargo,
-    },
-  ];
-  //if(id_abono){detallE_FACTURAs.id_abono = id_abono;}
+      recargo
+    }];
+
   // Preparar datos para envío
   const facturaData = {
     fecha,
@@ -1225,7 +1228,7 @@ async function registrarFactura() {
     id_tipo_factura,
     id_forma_pago,
     id_usuario,
-    detallE_FACTURAs, // Ahora es un array de objetos
+    detallE_FACTURAs 
   };
 
   try {
@@ -1240,7 +1243,7 @@ async function registrarFactura() {
       console.log("Factura registrada:", facturaData);
       alert("Factura Registrada Correctamente");
       await ocuparLugar(id_lugar);
-      form.reset();
+      //window.location.href = "/facturacion.html";
     } else {
       alert("Error al agregar la Factura");
     }
@@ -1253,7 +1256,7 @@ async function cargarFacturas() {
   try {
     const response = await fetch(`${API_URL}/api/Factura`);
     if (!response.ok) throw new Error("Error al cargar las Facturas");
-    let facturas = await response.json();
+    const facturas = await response.json();
     const tablaFacturas = document.getElementById("tablaFacturas");
     tablaFacturas.innerHTML = "";
     facturas.forEach((fact) => {
@@ -1338,7 +1341,7 @@ async function loginUsuario() {
 
   try {
     const response = await fetch(
-      `https://localhost:7230/api/Usuario/PostLogin`,
+      "https://localhost:7230/api/Usuario/PostLogin",
       {
         method: "POST",
         headers: {
@@ -1348,16 +1351,15 @@ async function loginUsuario() {
       }
     );
     const data = await response.json();
-    if (response.ok) {
+    if (response.ok && data.ok === true) {
+      // Verificación corregida
       localStorage.setItem("token", data.token);
       window.location.href = "/";
-
       alert("Login exitoso");
     } else {
       alert("Error de autenticación");
     }
   } catch (error) {
     console.error("Error en la solicitud:", error);
-    //alert("Error de conexión con el servidor");
   }
 }
