@@ -20,6 +20,9 @@ document.addEventListener("DOMContentLoaded", () => {
     cargarTiposFactura();
     cargarFormasPago();
     document
+      .getElementById("patente")
+      .addEventListener("blur", buscarVehiculoPorPatente);
+    document
       .getElementById("descuento")
       .addEventListener("input", validarRango);
     document.getElementById("recargo").addEventListener("input", validarRango);
@@ -73,8 +76,9 @@ class ParkingGarage {
   init() {
     this.renderLevel("upper");
     this.renderLevel("lower");
+    //this.updateAvailableSpots();
     updateParkingSpots();
-    this.updateAvailableSpots();
+
   }
 
   renderLevel(level) {
@@ -113,7 +117,7 @@ class ParkingGarage {
   }*/
 
   //Método para llevar la cuenta
-  updateAvailableSpots() {
+  /*updateAvailableSpots() {
     const totalSpots = this.spots.upper.length + this.spots.lower.length;
     const occupiedSpots = [...this.spots.upper, ...this.spots.lower].filter(
       (spot) => spot.isOccupied
@@ -121,7 +125,7 @@ class ParkingGarage {
 
     document.getElementById("availableSpots").textContent =
       totalSpots - occupiedSpots;
-  }
+  }*/
 }
 
 //Actualizar Lugares
@@ -285,6 +289,7 @@ function cargarLugaresDisponibles() {
         option.textContent = lugar.id_lugar;
         lugarSelect.appendChild(option);
       });
+      document.getElementById("availableSpots").textContent = lugaresOrdenados.length;
     })
     .catch((error) =>
       console.error("Error al cargar lugares disponibles:", error)
@@ -359,11 +364,11 @@ async function registrarRemito() {
 }
 async function registrarVehiculo() {
   const patente = document.getElementById("patente").value.trim();
-  const marca =
-    document.getElementById("marca").value === "otro"
+  let marca =
+    document.getElementById("marca").value === "otro" 
       ? document.getElementById("marcaInput").value
       : document.getElementById("marca").value;
-  const id_modelo =
+  let id_modelo =
     document.getElementById("modelo").value === "otro"
       ? document.getElementById("modeloInput").value
       : document.getElementById("modelo").value;
@@ -1178,7 +1183,8 @@ async function registrarFactura() {
     document.getElementById("formaPago").value,
     10
   );
-  const id_usuario = 1;
+  const id_usuario = 2;
+  //const id_usuario = parseInt(localStorage.getItem("id_usuario"), 10);
   const fecha_entrada = document.getElementById("fechaHoraEntrada").value;
   const fecha_salida = document.getElementById("fechaHoraSalida").value;
   const id_vehiculo = parseInt(document.getElementById("idVehiculo").value, 10);
@@ -1243,7 +1249,7 @@ async function registrarFactura() {
       console.log("Factura registrada:", facturaData);
       alert("Factura Registrada Correctamente");
       await ocuparLugar(id_lugar);
-      //window.location.href = "/facturacion.html";
+      window.location.href = "/facturacion.html";
     } else {
       alert("Error al agregar la Factura");
     }
@@ -1254,7 +1260,7 @@ async function registrarFactura() {
 }
 async function cargarFacturas() {
   try {
-    const response = await fetch(`${API_URL}/api/Factura`);
+    const response = await fetch(`${API_URL}/api/Factura/WithStoreProcedure`);
     if (!response.ok) throw new Error("Error al cargar las Facturas");
     const facturas = await response.json();
     const tablaFacturas = document.getElementById("tablaFacturas");
@@ -1265,11 +1271,11 @@ async function cargarFacturas() {
       tr.innerHTML = `
                   <td scope="col">${fact.id_factura}</td>
                   <td scope="col">${fecha}</td>
-                  <td scope="col">${fact.id_tipo_factura}</td>
-                  <td scope="col">${fact.id_forma_pago}</td>
-                  <td scope="col">${fact.id_cliente}</td>
-                  <td scope="col">${fact.id_usuario}</td>
-                  <td scope="col">${fact.detallE_FACTURAs[0].precio}</td>
+                  <td scope="col">${fact.TipoFactura}</td>
+                  <td scope="col">${fact.FormaPago}</td>
+                  <td scope="col">${fact.Cliente}</td>
+                  <td scope="col">${fact.usuario}</td>
+                  <td scope="col">${fact.precio}</td>
       `;
       tablaFacturas.appendChild(tr);
     });
@@ -1354,6 +1360,7 @@ async function loginUsuario() {
     if (response.ok && data.ok === true) {
       // Verificación corregida
       localStorage.setItem("token", data.token);
+      localStorage.setItem("id_usuario", data.id_usuario);
       window.location.href = "/";
       alert("Login exitoso");
     } else {

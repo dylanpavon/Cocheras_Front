@@ -98,11 +98,11 @@ body{
 
     .bg-image {
         background-image: url('/images/Foto1.jpg'); /* Reemplaza 'ruta/de/tu-imagen.jpg' por la ubicación de tu imagen */
-        background-size: cover; /* La imagen cubrirá todo el fondo */
+        background-size: 140%; /* La imagen cubrirá todo el fondo */
         background-position: center; /* Centra la imagen */
         background-repeat: no-repeat; /* Evita que la imagen se repita */
         color: white; /* Cambia el color del texto si necesitas más contraste */
-        padding: 20px; /* Añade algo de relleno si es necesario */
+        padding: 0px; /* Añade algo de relleno si es necesario */
       }
 
       h1.titulo {
